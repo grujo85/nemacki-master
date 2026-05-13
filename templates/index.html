@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nemački Master</title>
+    <style>
+        /* OSNOVNA POZADINA */
+        body { 
+            margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif; transition: 0.8s;
+            background: {{ 'linear-gradient(135deg, #1e88e5, #64b5f6)' if rezultat.clan == 'der' 
+                          else 'linear-gradient(135deg, #d81b60, #f06292)' if rezultat.clan == 'die'
+                          else 'linear-gradient(135deg, #43a047, #81c784)' if rezultat.clan == 'das'
+                          else '#f0f2f5' }};
+        }
+
+        .main-wrapper {
+            display: flex; align-items: flex-start; justify-content: center; gap: 30px;
+            max-width: 1100px; width: 100%;
+        }
+
+        /* KARTICE - Svetlije boje koje propuštaju pozadinu (Glassmorphism) */
+        .container, .legenda { 
+            backdrop-filter: blur(10px); /* Blago zamućenje iza kartice */
+            background: rgba(255, 255, 255, 0.92); /* Bela sa 92% vidljivosti */
+            border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .container { padding: 40px; text-align: center; width: 500px; }
+        .legenda { padding: 25px; width: 260px; border-top: 6px solid #222; }
+
+        /* INPUT I DUGME */
+        input { 
+            padding: 15px; width: 60%; border: 2px solid rgba(0,0,0,0.1); 
+            border-radius: 12px; outline: none; font-size: 16px; background: rgba(255,255,255,0.8);
+        }
+        button { 
+            padding: 15px 25px; border-radius: 12px; border: none; 
+            background: #222; color: white; cursor: pointer; font-weight: bold;
+        }
+
+        /* TABELA PADEŽA - Svetlija varijanta */
+        table { 
+            width: 100%; margin-top: 25px; border-collapse: collapse; 
+            background: rgba(255, 255, 255, 0.5); border-radius: 15px; overflow: hidden; 
+        }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        th { background: rgba(0,0,0,0.05); font-size: 12px; }
+
+        /* LEGENDA ELEMENTI */
+        .legenda-naslov { font-size: 20px; font-weight: bold; margin-bottom: 15px; }
+        .stavka { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 12px; margin-bottom: 10px; font-weight: bold; }
+        .m-rod { background: #e3f2fd; color: #1e88e5; }
+        .f-rod { background: #fce4ec; color: #d81b60; }
+        .n-rod { background: #e8f5e9; color: #43a047; }
+        .krug { width: 10px; height: 10px; border-radius: 50%; }
+
+        /* MOBILNA VERZIJA */
+        @media (max-width: 850px) {
+            .main-wrapper { flex-direction: column; align-items: center; }
+            .container, .legenda { width: 95%; }
+            h1 { font-size: 38px !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div class="container">
+        <form method="POST">
+            <input type="text" name="rec" placeholder="Srpska reč..." required autofocus>
+            <button type="submit">GO</button>
+        </form>
+
+        {% if rezultat %}
+        <div style="margin-top: 30px;">
+			<!-- Dodat ID i poboljšan stil za klik -->
+			<div id="audioBtn" style="font-size: 50px; cursor: pointer; display: inline-block; user-select: none;" 
+				 onclick="speak('{{ rezultat.de }}')">🔊</div>
+			
+			<h1 style="font-size: 50px; margin: 5px 0;">{{ rezultat.clan }} {{ rezultat.de }}</h1>
+			<p>Množina: <b>die {{ rezultat.mnozina }}</b></p>
+			
+            <table>
+                <thead><tr><th>Padež</th><th>Član / Pokazna</th></tr></thead>
+                {% for p, v in rezultat.padezi.items() %}
+                <tr><td><b>{{ p[:3] }}.</b></td><td style="font-size: 14px;">{{ v }}</td></tr>
+                {% endfor %}
+            </table>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 10px; font-style: italic;">
+                "{{ rezultat.primer }}"
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- LEGENDA -->
+    <div class="legenda">
+        <div class="legenda-naslov">💡 Podsetnik</div>
+        <div class="stavka m-rod"><div class="krug" style="background:#1e88e5"></div> der — Muški (m)</div>
+        <div class="stavka f-rod"><div class="krug" style="background:#d81b60"></div> die — Ženski (f)</div>
+        <div class="stavka n-rod"><div class="krug" style="background:#43a047"></div> das — Srednji (n)</div>
+        <div style="font-size:12px; color:#666; margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
+            Savet: Uvek uči imenicu sa članom!
+        </div>
+    </div>
+</div>
+
+<script>
+let germanVoice = null;
+
+// Funkcija koja traži nemački glas u sistemu
+function loadVoices() {
+    let voices = window.speechSynthesis.getVoices();
+    // Tražimo glas koji je baš nemački (de-DE)
+    germanVoice = voices.find(v => v.lang === 'de-DE' || v.lang.includes('de_DE'));
+    
+    // Ako nije našao de-DE, uzmi bilo koji nemački (npr. austrijski ili švajcarski)
+    if (!germanVoice) {
+        germanVoice = voices.find(v => v.lang.includes('de'));
+    }
+}
+
+// Bitno: Neki brauzeri traže ovaj događaj da bi učitali glasove
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function speak(word) {
+    // Ako već nešto govori, zaustavi ga
+    window.speechSynthesis.cancel();
+
+    if (!word) return;
+
+    let msg = new SpeechSynthesisUtterance();
+    msg.text = word;
+    msg.lang = 'de-DE';
+    msg.rate = 0.85; // Malo sporije radi boljeg učenja
+    
+    if (germanVoice) {
+        msg.voice = germanVoice;
+    }
+
+    // Dodajemo mali vizuelni efekat da znaš da je kliknuto
+    const btn = document.getElementById('audioBtn');
+    btn.style.transform = "scale(1.2)";
+    setTimeout(() => btn.style.transform = "scale(1)", 200);
+
+    window.speechSynthesis.speak(msg);
+}
+
+// Rešenje za mobilne: Brauzeri nekad traže "otključavanje" zvuka
+document.body.addEventListener('touchstart', function() {
+    if (window.speechSynthesis.speaking) return;
+    // Prazan izgovor koji "otključava" audio na iOS/Android
+    let silentMsg = new SpeechSynthesisUtterance("");
+    window.speechSynthesis.speak(silentMsg);
+}, { once: true });
+</script>
+
+</body>
+</html>
