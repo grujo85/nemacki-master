@@ -2,7 +2,8 @@
 
 # 🇩🇪 Nemački Master
 
-**Nemački Master** je interaktivna web aplikacija dizajnirana da pomogne korisnicima u učenju nemačke gramatike, fokusirajući se na imenice, njihove rodove, množinu i deklinaciju kroz padeže.
+- **Nemački Master** je interaktivna web aplikacija dizajnirana da pomogne korisnicima u učenju nemačke gramatike,
+   fokusirajući se na imenice, njihove rodove, množinu i deklinaciju kroz padeže.
 
 ## 👥 Autori
 *   **Idejni tvorac & UI/UX koncept:** Andrijana Kostić
