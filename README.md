@@ -48,7 +48,7 @@ Bash
 ---
 
 ## 📂 Struktura Projekta
-
+```text
 / nemacki-master
 │-- app.py                # Flask backend logika
 ├── static/
@@ -57,7 +57,7 @@ Bash
 │       └── script.js     # Logika za audio izgovor
 └── templates/
     └── index.html        # HTML interfejs (Jinja2)---
-
+```
 ---
 
 ## 🌍 Link
