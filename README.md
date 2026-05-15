@@ -59,4 +59,4 @@ Bash
     └── index.html        # HTML interfejs (Jinja2)---
 
 ---
-[![Demo](https://img.shields.io/badge/🔗_Live_Demo-nemacki--master.onrender.com-blueviolet?style=for-the-badge)](https://nemacki-master.onrender.com/)
+[🔗 Live Demo](https://nemacki-master.onrender.com/)
