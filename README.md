@@ -48,7 +48,7 @@ Bash
 ---
 
 ## 📂 Struktura Projekta
-```text
+
 / nemacki-master
 │-- app.py                # Flask backend logika
 ├── static/
