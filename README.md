@@ -59,10 +59,5 @@ Bash
     └── index.html        # HTML interfejs (Jinja2)---
 
 ---
-<p align="center">
-  <a href="https://nemacki-master.onrender.com/">
-    <img src="https://cdn-icons-png.flaticon.com/512/281/281035.png" width="100" alt="Planet Icon">
-  </a>
-  <br>
-  <a href="https://nemacki-master.onrender.com/">https://nemacki-master.onrender.com/</a>
-</p>
+## 🌍 Link
+https://nemacki-master.onrender.com
