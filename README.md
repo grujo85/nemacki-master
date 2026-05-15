@@ -28,13 +28,13 @@
 
 1. **Kloniraj repozitorijum:**
    ```bash
-   git clone [https://github.com/tvoj-username/nemacki-master.git](https://github.com/tvoj-username/nemacki-master.git)
+   git clone [https://github.com/grujo85/nemacki-master.git](https://github.com/grujo85/nemacki-master.git)
    cd nemacki-master
 
     Instaliraj biblioteke:
     Bash
 
-pip install flask requests deep-translator
+- pip install flask requests deep-translator
 
 Pokreni aplikaciju:
 Bash
